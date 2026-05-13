@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <title>Python → Variables, Data Types, Print & Numbers</title>
+  <style>
+      :root {
+    --bg:            #161320;
+    --bg-card:       #201d2e;
+    --bg-deep:       #1a1728;
+    --bg-subtle:     #1c1928;
+    --bg-inline:     #1a172a;
+    --border:        #2e2840;
+    --border-subtle: #3a3358;
+    --border-note:   #3a3358;
+    --text-primary:  #f0eaf8;
+    --text-white:    #f0eaf8;
+    --text-heading:  #f0eaf8;
+    --text-secondary:#9080b0;
+    --text-muted:    #4a4065;
+    --text-table:    #d0c8e8;
+    --text-comment:  #5a5080;
+    --color-code:    #c084fc;
+    --grid-line:     rgba(200,180,255,0.025);
+    --toggle-bg:     #2a2438;
+    --accent-clr:    #c084fc;
+  }
+
+    /* ── End theme variables ────────────────────────────── */
+
+        [data-theme="light"] {
+    --bg:            #f8f5ff;
+    --bg-card:       #ffffff;
+    --bg-deep:       #ede9f8;
+    --bg-subtle:     #f3f0fc;
+    --bg-inline:     #e8e2f5;
+    --border:        #e2d9f3;
+    --border-subtle: #d0c6ed;
+    --border-note:   #d0c6ed;
+    --text-primary:  #2d1b69;
+    --text-white:    #2d1b69;
+    --text-heading:  #2d1b69;
+    --text-secondary:#7a6aaa;
+    --text-muted:    #b0a4d8;
+    --text-table:    #3d2d6e;
+    --text-comment:  #9b8cc0;
+    --color-code:    #7c3aed;
+    --grid-line:     rgba(140,100,220,0.06);
+    --toggle-bg:     #e2d9f3;
+    --accent-clr:    #9b7fe8;
+  }
+
+    /* ── End theme variables ──────────────────────────── */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 3rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-family: 'Kalam', cursive;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+    }
+
+    header h1 span {
+      color: var(--accent-clr, #c9624f);
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent-clr, #c9624f);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.6rem 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+        .card-title {
+      font-family: 'Kalam', cursive;
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-heading);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .tag {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    /* Dark theme */
+    .tag-var {
+      background: #1e2a4a;
+      color: #60a5fa;
+    }
+
+    .tag-type {
+      background: #2a1e4a;
+      color: #c4b5fd;
+    }
+
+    .tag-cast {
+      background: #1e3a2a;
+      color: #34d399;
+    }
+
+    .tag-num {
+      background: #3a2a1e;
+      color: #fb923c;
+    }
+
+    .tag-print {
+      background: #2a1e2a;
+      color: #f472b6;
+    }
+
+    .tag-tip {
+      background: #2a2a1e;
+      color: #facc15;
+    }
+
+    /* Light theme */
+    [data-theme="light"] .tag-var {
+      background: #e0eaff;
+      color: #2d4fa8;
+    }
+
+    [data-theme="light"] .tag-type {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    [data-theme="light"] .tag-cast {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    [data-theme="light"] .tag-num {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    [data-theme="light"] .tag-print {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    [data-theme="light"] .tag-tip {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    [data-theme="light"] .tag-var {
+      background: #e0eaff;
+      color: #2d4fa8;
+    }
+
+    [data-theme="light"] .tag-type {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    [data-theme="light"] .tag-cast {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    [data-theme="light"] .tag-num {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    [data-theme="light"] .tag-print {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    [data-theme="light"] .tag-tip {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    pre {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent-clr, #c9624f);
+      border-radius: 7px;
+      padding: 1.1rem 1.4rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.85;
+      overflow-x: auto;
+      margin: 0.7rem 0;
+    }
+
+    .kw {
+      color: #c084fc;
+      font-weight: 600;
+    }
+
+    .fn {
+      color: #60a5fa;
+    }
+
+    .st {
+      color: #86efac;
+    }
+
+    .nm {
+      color: #fb923c;
+    }
+
+    .cm {
+      color: var(--text-comment);
+      font-style: italic;
+    }
+
+    .op {
+      color: #64748b;
+    }
+
+    .tp {
+      color: #34d399;
+    }
+
+    .note {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.7rem;
+      padding: 0.6rem 1rem;
+      background: var(--bg-subtle);
+      border-left: 2px solid var(--border-note);
+      border-radius: 0 5px 5px 0;
+    }
+
+    .note strong {
+      color: #fb923c;
+    }
+
+    .warn {
+      background: #1a0e0a;
+      border: 1px solid #78350f;
+      border-radius: 6px;
+      padding: 0.7rem 1.1rem;
+      font-size: 0.83rem;
+      color: #fcd34d;
+      margin-top: 0.7rem;
+    }
+
+    [data-theme="light"] .warn {
+      background: #fff7ed;
+      border: 1px solid #fdba74;
+      color: #c2410c;
+    }
+
+    .warn::before {
+      content: '⚠  ';
+    }
+
+    .good {
+      background: #1a1e16;
+      border: 1px solid #2e4a2a;
+      border-radius: 6px;
+      padding: 0.7rem 1.1rem;
+      font-size: 0.83rem;
+      color: #86efac;
+      margin-top: 0.7rem;
+    }
+
+    .good::before {
+      content: '✓  ';
+    }
+
+    [data-theme="light"] .good {
+      background: #f0fdf0;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.7rem;
+    }
+
+    th {
+      background: var(--bg-deep);
+      color: var(--accent-clr, #c9624f);
+      font-weight: 700;
+      padding: 0.6rem 1rem;
+      text-align: left;
+      border: 1px solid var(--border);
+      font-size: 0.72rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      color: var(--text-table);
+      font-family: 'Courier New', monospace;
+      font-size: 0.83rem;
+    }
+
+    td.plain {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.83rem;
+    }
+
+    tr:nth-child(even) td {
+      background: var(--bg-subtle);
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    code {
+      background: var(--bg-inline);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.83rem;
+      color: var(--color-code);
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body>* {
+      position: relative;
+      z-index: 1;
+    }
+
+
+    /* ── Nav bar ──────────────────────────────────────── */
+    .ch-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ch-back {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .ch-back:hover {
+      color: var(--text-primary);
+    }
+
+    .ch-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ch-toggle-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+    }
+
+    .ch-toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .ch-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .ch-toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--toggle-bg);
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      transition: background 0.3s, border 0.3s;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .ch-toggle-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-clr, #818cf8);
+      transition: transform 0.25s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+    }
+
+    .ch-toggle input:checked~.ch-toggle-track .ch-toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    /* ── End nav bar ──────────────────────────────────── */
+  
+        [data-theme="light"] pre {
+      background: #ede9f8;
+      border-color: #d0c6ed;
+      color: #2d1b69;
+    }
+
+    [data-theme="light"] .kw { color: #7c3aed; }
+    [data-theme="light"] .fn { color: #2563a8; }
+    [data-theme="light"] .st { color: #c4622d; }
+    [data-theme="light"] .nm { color: #d97706; }
+    [data-theme="light"] .cm { color: #9b8cc0; font-style: italic; }
+    [data-theme="light"] .op { color: #8b7ab8; }
+    [data-theme="light"] .tp { color: #0f766e; }
+
+    [data-theme="light"] code {
+      background: #e8e2f5;
+      border-color: #d0c6ed;
+      color: #7c3aed;
+    }
+
+    [data-theme="light"] .good {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    [data-theme="light"] .warn {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    [data-theme="light"] th {
+      color: #9b7fe8;
+    }
+
+    [data-theme="light"] .section-title {
+      color: #9b7fe8;
+    }
+
+    [data-theme="light"] header h1 span {
+      color: #9b7fe8;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="ch-nav">
+    <a class="ch-back" href="index.html">← Index</a>
+    <div class="ch-toggle-wrap">
+      <span class="ch-toggle-label" id="ch-theme-label">DARK</span>
+      <label class="ch-toggle" aria-label="Toggle theme">
+        <input type="checkbox" id="ch-theme-toggle">
+        <div class="ch-toggle-track">
+          <div class="ch-toggle-thumb" id="ch-thumb">☽</div>
+        </div>
+      </label>
+    </div>
+  </nav>
+
+  <header>
+    <h1>Python → <span>Variables, Data Types, Print & Numbers</span></h1>
+    <p>Chapter 1 — Quick Revision Cheat Sheet</p>
+  </header>
+
+  <!-- VARIABLES -->
+  <div class="section">
+    <div class="section-title">variables</div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-var">VAR</span> Declaring Variables</div>
+      <pre>name <span class="op">=</span> <span class="st">"Alice"</span>      <span class="cm"># str</span>
+age  <span class="op">=</span> <span class="nm">25</span>           <span class="cm"># int</span>
+pi   <span class="op">=</span> <span class="nm">3.14</span>         <span class="cm"># float</span>
+flag <span class="op">=</span> <span class="kw">True</span>         <span class="cm"># bool</span></pre>
+      <div class="note"><strong>Note:</strong> No need to declare type — Python infers it automatically (dynamic typing)
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-var">VAR</span> Multiple Assignment</div>
+      <pre>x, y, z <span class="op">=</span> <span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>   <span class="cm"># assign different values</span>
+a <span class="op">=</span> b <span class="op">=</span> c <span class="op">=</span> <span class="nm">100</span>        <span class="cm"># assign same value to all</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-var">VAR</span> Naming Rules</div>
+      <table>
+        <tr>
+          <th>Rule</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td class="plain">Must start with letter or _</td>
+          <td>name, _name ✓</td>
+        </tr>
+        <tr>
+          <td class="plain">Cannot start with number</td>
+          <td>2name ✗</td>
+        </tr>
+        <tr>
+          <td class="plain">Case sensitive</td>
+          <td>name ≠ Name ≠ NAME</td>
+        </tr>
+        <tr>
+          <td class="plain">No spaces — use underscore</td>
+          <td>first_name ✓</td>
+        </tr>
+        <tr>
+          <td class="plain">Cannot be a keyword</td>
+          <td>if, for, while ✗</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-tip">TIP</span> Dynamic Typing</div>
+      <pre>x <span class="op">=</span> <span class="nm">10</span>         <span class="cm"># x is int</span>
+x <span class="op">=</span> <span class="st">"Python"</span>   <span class="cm"># x is now str — valid in Python</span>
+<span class="fn">print</span>(<span class="fn">type</span>(x)) <span class="cm"># &lt;class 'str'&gt;</span></pre>
+      <div class="note"><strong>Key:</strong> Variable type can change at runtime — this is called dynamic typing</div>
+    </div>
+  </div>
+
+  <!-- DATA TYPES -->
+  <div class="section">
+    <div class="section-title">data types</div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-type">TYPE</span> Built-in Data Types</div>
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Example</th>
+          <th>type() output</th>
+        </tr>
+        <tr>
+          <td>int</td>
+          <td>x = 10</td>
+          <td>&lt;class 'int'&gt;</td>
+        </tr>
+        <tr>
+          <td>float</td>
+          <td>x = 3.14</td>
+          <td>&lt;class 'float'&gt;</td>
+        </tr>
+        <tr>
+          <td>complex</td>
+          <td>x = 2j</td>
+          <td>&lt;class 'complex'&gt;</td>
+        </tr>
+        <tr>
+          <td>str</td>
+          <td>x = "hello"</td>
+          <td>&lt;class 'str'&gt;</td>
+        </tr>
+        <tr>
+          <td>bool</td>
+          <td>x = True</td>
+          <td>&lt;class 'bool'&gt;</td>
+        </tr>
+        <tr>
+          <td>list</td>
+          <td>x = [1, 2, 3]</td>
+          <td>&lt;class 'list'&gt;</td>
+        </tr>
+        <tr>
+          <td>tuple</td>
+          <td>x = (1, 2, 3)</td>
+          <td>&lt;class 'tuple'&gt;</td>
+        </tr>
+        <tr>
+          <td>dict</td>
+          <td>x = {"a": 1}</td>
+          <td>&lt;class 'dict'&gt;</td>
+        </tr>
+        <tr>
+          <td>NoneType</td>
+          <td>x = None</td>
+          <td>&lt;class 'NoneType'&gt;</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-type">TYPE</span> Checking Type</div>
+      <pre><span class="fn">type</span>(<span class="nm">10</span>)        <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">type</span>(<span class="nm">3.14</span>)      <span class="cm"># &lt;class 'float'&gt;</span>
+<span class="fn">type</span>(<span class="st">"hello"</span>)   <span class="cm"># &lt;class 'str'&gt;</span>
+<span class="fn">type</span>(<span class="kw">True</span>)      <span class="cm"># &lt;class 'bool'&gt;</span>
+<span class="fn">type</span>(<span class="nm">2j</span>)        <span class="cm"># &lt;class 'complex'&gt;</span>
+<span class="fn">type</span>(<span class="kw">None</span>)      <span class="cm"># &lt;class 'NoneType'&gt;</span></pre>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-type">TYPE</span> Truthy & Falsy Values</div>
+      <table>
+        <tr>
+          <th>Falsy (treated as False)</th>
+          <th>Truthy (treated as True)</th>
+        </tr>
+        <tr>
+          <td>0, 0.0, 0j</td>
+          <td>Any non-zero number</td>
+        </tr>
+        <tr>
+          <td>"" (empty string)</td>
+          <td>"hello", "False", "0"</td>
+        </tr>
+        <tr>
+          <td>[] (empty list)</td>
+          <td>[0], [False]</td>
+        </tr>
+        <tr>
+          <td>None</td>
+          <td>Any object</td>
+        </tr>
+        <tr>
+          <td>False</td>
+          <td>True</td>
+        </tr>
+      </table>
+      <div class="warn">bool("False") → True — non-empty string is always truthy</div>
+    </div>
+  </div>
+
+  <!-- TYPE CASTING -->
+  <div class="section">
+    <div class="section-title">type casting</div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-cast">CAST</span> Casting Functions</div>
+      <pre><span class="fn">int</span>(<span class="nm">10.9</span>)       <span class="cm"># 10     — truncates, does NOT round</span>
+<span class="fn">int</span>(<span class="st">"25"</span>)       <span class="cm"># 25     — string to int</span>
+<span class="fn">float</span>(<span class="nm">10</span>)       <span class="cm"># 10.0   — int to float</span>
+<span class="fn">str</span>(<span class="nm">499</span>)        <span class="cm"># "499"  — int to string</span>
+<span class="fn">bool</span>(<span class="nm">0</span>)         <span class="cm"># False</span>
+<span class="fn">bool</span>(<span class="st">"hello"</span>)   <span class="cm"># True</span></pre>
+      <div class="note"><strong>Key:</strong> int() truncates — int(10.9) → 10, NOT 11</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-cast">CAST</span> Common Casting Errors</div>
+      <pre><span class="cm"># ✗ Wrong — cannot concat str + int</span>
+age <span class="op">=</span> <span class="nm">25</span>
+<span class="fn">print</span>(<span class="st">"Age is "</span> <span class="op">+</span> age)        <span class="cm"># TypeError</span>
+
+<span class="cm"># ✓ Correct</span>
+<span class="fn">print</span>(<span class="st">"Age is "</span> <span class="op">+</span> <span class="fn">str</span>(age))    <span class="cm"># Age is 25</span>
+<span class="fn">print</span>(<span class="st">f"Age is </span><span class="op">{</span>age<span class="op">}</span><span class="st">"</span>)          <span class="cm"># Age is 25</span></pre>
+    </div>
+  </div>
+
+  <!-- PRINT -->
+  <div class="section">
+    <div class="section-title">print()</div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-print">PRINT</span> All Print Styles</div>
+      <pre>name <span class="op">=</span> <span class="st">"Alice"</span>
+age  <span class="op">=</span> <span class="nm">25</span>
+
+<span class="fn">print</span>(name, age)                  <span class="cm"># Alice 25</span>
+<span class="fn">print</span>(<span class="st">"Name:"</span>, name)             <span class="cm"># Name: Alice</span>
+<span class="fn">print</span>(<span class="st">"Name: "</span> <span class="op">+</span> name)           <span class="cm"># Name: Alice (concat)</span>
+<span class="fn">print</span>(<span class="st">f"Name: </span><span class="op">{</span>name<span class="op">}</span><span class="st">, Age: </span><span class="op">{</span>age<span class="op">}</span><span class="st">"</span>) <span class="cm"># f-string (recommended)</span></pre>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title"><span class="tag tag-print">PRINT</span> sep parameter</div>
+        <pre><span class="fn">print</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>)
+<span class="cm"># a b c  (default sep=" ")</span>
+
+<span class="fn">print</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, sep<span class="op">=</span><span class="st">"-"</span>)
+<span class="cm"># a-b-c</span>
+
+<span class="fn">print</span>(<span class="st">"a"</span>, <span class="st">"b"</span>, sep<span class="op">=</span><span class="st">""</span>)
+<span class="cm"># ab</span></pre>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="tag tag-print">PRINT</span> end parameter</div>
+        <pre><span class="fn">print</span>(<span class="st">"Hello"</span>)
+<span class="fn">print</span>(<span class="st">"World"</span>)
+<span class="cm"># Hello</span>
+<span class="cm"># World  (default end="\n")</span>
+
+<span class="fn">print</span>(<span class="st">"Hello"</span>, end<span class="op">=</span><span class="st">" "</span>)
+<span class="fn">print</span>(<span class="st">"World"</span>)
+<span class="cm"># Hello World</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-print">PRINT</span> f-strings (Most Used)</div>
+      <pre>name <span class="op">=</span> <span class="st">"Alice"</span>
+score <span class="op">=</span> <span class="nm">95.678</span>
+
+<span class="fn">print</span>(<span class="st">f"Hello </span><span class="op">{</span>name<span class="op">}</span><span class="st">"</span>)              <span class="cm"># Hello Alice</span>
+<span class="fn">print</span>(<span class="st">f"Score: </span><span class="op">{</span>score<span class="op">:.2</span>f<span class="op">}</span><span class="st">"</span>)        <span class="cm"># Score: 95.68</span>
+<span class="fn">print</span>(<span class="st">f"</span><span class="op">{</span>name<span class="op">}</span><span class="st"> scored </span><span class="op">{</span>score<span class="op">:.0</span>f<span class="op">}</span><span class="st">"</span>)  <span class="cm"># Alice scored 96</span>
+<span class="fn">print</span>(<span class="st">f"2 + 2 = </span><span class="op">{</span><span class="nm">2</span><span class="op">+</span><span class="nm">2</span><span class="op">}</span><span class="st">"</span>)            <span class="cm"># 2 + 2 = 4  (expression inside)</span></pre>
+    </div>
+  </div>
+
+  <!-- NUMBERS -->
+  <div class="section">
+    <div class="section-title">numbers & operators</div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-num">NUM</span> Arithmetic Operators</div>
+      <table>
+        <tr>
+          <th>Operator</th>
+          <th>Name</th>
+          <th>Example</th>
+          <th>Result</th>
+        </tr>
+        <tr>
+          <td>+</td>
+          <td class="plain">Addition</td>
+          <td>5 + 2</td>
+          <td>7</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td class="plain">Subtraction</td>
+          <td>5 - 2</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>*</td>
+          <td class="plain">Multiplication</td>
+          <td>5 * 2</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>/</td>
+          <td class="plain">Division (float)</td>
+          <td>5 / 2</td>
+          <td>2.5</td>
+        </tr>
+        <tr>
+          <td>//</td>
+          <td class="plain">Floor Division</td>
+          <td>5 // 2</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>%</td>
+          <td class="plain">Modulus (remainder)</td>
+          <td>5 % 2</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>**</td>
+          <td class="plain">Exponent (power)</td>
+          <td>5 ** 2</td>
+          <td>25</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title"><span class="tag tag-num">NUM</span> / vs //</div>
+        <pre>x <span class="op">=</span> <span class="nm">5</span>
+y <span class="op">=</span> <span class="nm">2</span>
+
+<span class="fn">print</span>(x <span class="op">/</span>  y)  <span class="cm"># 2.5  → float</span>
+<span class="fn">print</span>(x <span class="op">//</span> y)  <span class="cm"># 2    → floor</span>
+<span class="fn">print</span>(x <span class="op">%</span>  y)  <span class="cm"># 1    → remainder</span>
+<span class="fn">print</span>(x <span class="op">**</span> y)  <span class="cm"># 25   → power</span></pre>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="tag tag-num">NUM</span> String * Number</div>
+        <pre>x <span class="op">=</span> <span class="st">"50"</span>
+<span class="fn">print</span>(x <span class="op">*</span> <span class="nm">3</span>)   <span class="cm"># "505050"</span>
+<span class="cm"># string repetition, not math!</span>
+
+x <span class="op">=</span> <span class="st">"Ha"</span>
+<span class="fn">print</span>(x <span class="op">*</span> <span class="nm">3</span>)   <span class="cm"># "HaHaHa"</span></pre>
+        <div class="note"><strong>Trap:</strong> "50" * 3 = "505050", not 150</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-num">NUM</span> Number Functions</div>
+      <pre><span class="fn">abs</span>(<span class="op">-</span><span class="nm">5</span>)          <span class="cm"># 5      — absolute value</span>
+<span class="fn">round</span>(<span class="nm">3.567</span>, <span class="nm">2</span>)   <span class="cm"># 3.57   — rounds to 2 decimal places</span>
+<span class="fn">round</span>(<span class="nm">2.5</span>)        <span class="cm"># 2      — banker's rounding (rounds to even!)</span>
+<span class="fn">round</span>(<span class="nm">3.5</span>)        <span class="cm"># 4</span>
+<span class="fn">pow</span>(<span class="nm">2</span>, <span class="nm">10</span>)        <span class="cm"># 1024   — same as 2**10</span>
+<span class="fn">max</span>(<span class="nm">3</span>, <span class="nm">7</span>, <span class="nm">1</span>)      <span class="cm"># 7</span>
+<span class="fn">min</span>(<span class="nm">3</span>, <span class="nm">7</span>, <span class="nm">1</span>)      <span class="cm"># 1</span></pre>
+      <div class="warn">round(2.5) → 2, NOT 3 — Python uses banker's rounding (round half to even)</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="tag tag-num">NUM</span> math module</div>
+      <pre><span class="kw">import</span> math
+
+math.<span class="fn">sqrt</span>(<span class="nm">16</span>)     <span class="cm"># 4.0</span>
+math.<span class="fn">ceil</span>(<span class="nm">4.2</span>)    <span class="cm"># 5   — rounds UP always</span>
+math.<span class="fn">floor</span>(<span class="nm">4.9</span>)   <span class="cm"># 4   — rounds DOWN always</span>
+math.<span class="fn">pi</span>           <span class="cm"># 3.141592653589793</span>
+math.<span class="fn">factorial</span>(<span class="nm">5</span>) <span class="cm"># 120</span></pre>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE -->
+  <div class="section">
+    <div class="section-title">quick reference</div>
+    <div class="card">
+      <table>
+        <tr>
+          <th>Task</th>
+          <th>How</th>
+        </tr>
+        <tr>
+          <td class="plain">Check type of variable</td>
+          <td>type(x)</td>
+        </tr>
+        <tr>
+          <td class="plain">Convert to int</td>
+          <td>int(x) — truncates decimals</td>
+        </tr>
+        <tr>
+          <td class="plain">Convert to float</td>
+          <td>float(x)</td>
+        </tr>
+        <tr>
+          <td class="plain">Convert to string</td>
+          <td>str(x)</td>
+        </tr>
+        <tr>
+          <td class="plain">Print with variables</td>
+          <td>f"text {var}" (f-string)</td>
+        </tr>
+        <tr>
+          <td class="plain">Print without newline</td>
+          <td>print(x, end="")</td>
+        </tr>
+        <tr>
+          <td class="plain">Print with custom separator</td>
+          <td>print(a, b, sep="-")</td>
+        </tr>
+        <tr>
+          <td class="plain">Float division</td>
+          <td>x / y</td>
+        </tr>
+        <tr>
+          <td class="plain">Floor division</td>
+          <td>x // y</td>
+        </tr>
+        <tr>
+          <td class="plain">Remainder</td>
+          <td>x % y</td>
+        </tr>
+        <tr>
+          <td class="plain">Power</td>
+          <td>x ** y</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const _t = document.getElementById('ch-theme-toggle');
+    const _h = document.documentElement;
+    const _l = document.getElementById('ch-theme-label');
+    const _i = document.getElementById('ch-thumb');
+
+    _t.checked = true;
+    _l.textContent = 'LIGHT';
+    _i.textContent = '☀';
+
+    _t.addEventListener('change', () => {
+      if (_t.checked) {
+        _h.setAttribute('data-theme', 'light');
+        _l.textContent = 'LIGHT';
+        _i.textContent = '☀';
+      } else {
+        _h.setAttribute('data-theme', 'dark');
+        _l.textContent = 'DARK';
+        _i.textContent = '☽';
+      }
+    });
+  </script>
+</body>
+
+</html>

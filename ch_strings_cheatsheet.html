@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python → Strings</title>
+<style>
+  /* ── Theme variables ─────────────────────────────── */
+    :root {
+    --bg:            #161320;
+    --bg-card:       #201d2e;
+    --bg-deep:       #1a1728;
+    --bg-subtle:     #1c1928;
+    --bg-inline:     #1a172a;
+    --border:        #2e2840;
+    --border-subtle: #3a3358;
+    --border-note:   #3a3358;
+    --text-primary:  #f0eaf8;
+    --text-white:    #f0eaf8;
+    --text-heading:  #f0eaf8;
+    --text-secondary:#9080b0;
+    --text-muted:    #4a4065;
+    --text-table:    #d0c8e8;
+    --text-comment:  #5a5080;
+    --color-code:    #c084fc;
+    --grid-line:     rgba(200,180,255,0.025);
+    --toggle-bg:     #2a2438;
+    --accent-clr:    #c084fc;
+  }
+
+      [data-theme="light"] {
+    --bg:            #f8f5ff;
+    --bg-card:       #ffffff;
+    --bg-deep:       #ede9f8;
+    --bg-subtle:     #f3f0fc;
+    --bg-inline:     #e8e2f5;
+    --border:        #e2d9f3;
+    --border-subtle: #d0c6ed;
+    --border-note:   #d0c6ed;
+    --text-primary:  #2d1b69;
+    --text-white:    #2d1b69;
+    --text-heading:  #2d1b69;
+    --text-secondary:#7a6aaa;
+    --text-muted:    #b0a4d8;
+    --text-table:    #3d2d6e;
+    --text-comment:  #9b8cc0;
+    --color-code:    #7c3aed;
+    --grid-line:     rgba(140,100,220,0.06);
+    --toggle-bg:     #e2d9f3;
+    --accent-clr:    #9b7fe8;
+  }
+  /* ── End theme variables ──────────────────────────── */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 { font-family: 'Kalam', cursive; font-size: 2.2rem; font-weight: 400; color: var(--text-white); letter-spacing: -0.5px; }
+  header h1 span { color: var(--accent-clr, #9b7fe8); }
+  header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.4rem; }
+
+  .section { margin-bottom: 3rem; }
+
+  .section-title {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent-clr, #9b7fe8); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 1.2rem;
+  }
+
+      .card-title {
+      font-family: 'Kalam', cursive;
+      font-size: 1rem;
+      font-weight: 400; color: var(--text-heading);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .tag {
+    font-size: 0.6rem; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+  }
+
+  .tag-basic  { background: #1e3a2a; color: #86efac; }
+  .tag-index  { background: #2a1e3a; color: var(--color-code); }
+  .tag-method { background: #1e3a5f; color: #60a5fa; }
+  .tag-format { background: #3a2a1e; color: #fb923c; }
+  .tag-check  { background: #3a1e2a; color: #f87171; }
+  .tag-split  { background: #2a2a1e; color: #facc15; }
+  .tag-tip    { background: #1e2a2a; color: #22d3ee; }
+
+  pre {
+    background: var(--bg-deep); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-clr, #9b7fe8); border-radius: 7px;
+    padding: 1.1rem 1.4rem; font-family: 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.85; overflow-x: auto; margin: 0.7rem 0;
+  }
+
+  .kw  { color: #c084fc; font-weight: 600; }
+  .fn  { color: #60a5fa; }
+  .st  { color: #86efac; }
+  .nm  { color: #fb923c; }
+  .cm  { color: var(--text-comment); font-style: italic; }
+  .op  { color: #64748b; }
+
+  .note {
+    font-size: 0.82rem; color: var(--text-muted); margin-top: 0.7rem;
+    padding: 0.6rem 1rem; background: var(--bg-subtle);
+    border-left: 2px solid var(--border-note); border-radius: 0 5px 5px 0;
+  }
+  .note strong { color: #fb923c; }
+
+  .warn {
+    background: #1a1200; border: 1px solid #78350f; border-radius: 6px;
+    padding: 0.7rem 1.1rem; font-size: 0.83rem; color: #fcd34d; margin-top: 0.7rem;
+  }
+  .warn::before { content: '⚠  '; }
+
+  .good {
+    background: #001a0d; border: 1px solid #14532d; border-radius: 6px;
+    padding: 0.7rem 1.1rem; font-size: 0.83rem; color: #6ee7b7; margin-top: 0.7rem;
+  }
+  .good::before { content: '✓  '; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.7rem; }
+
+  th {
+    background: var(--bg-deep); color: var(--accent-clr, #9b7fe8); font-weight: 700;
+    padding: 0.6rem 1rem; text-align: left; border: 1px solid var(--border);
+    font-size: 0.72rem; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+
+  td { padding: 0.6rem 1rem; border: 1px solid var(--border); color: var(--text-table); font-family: 'Courier New', monospace; font-size: 0.83rem; }
+  td.plain { font-family: 'Nunito', sans-serif; font-size: 0.83rem; }
+  tr:nth-child(even) td { background: var(--bg-subtle); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+  code {
+    background: var(--bg-inline); border: 1px solid var(--border-subtle); border-radius: 3px;
+    padding: 1px 6px; font-family: 'Courier New', monospace;
+    font-size: 0.83rem; color: var(--color-code);
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body > * { position: relative; z-index: 1; }
+
+
+  /* ── Nav bar ──────────────────────────────────────── */
+  .ch-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ch-back {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .ch-back:hover { color: var(--text-primary); }
+
+  .ch-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ch-toggle-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+  }
+
+  .ch-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .ch-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  .ch-toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--toggle-bg);
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    transition: background 0.3s, border 0.3s;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .ch-toggle-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-clr, #86efac);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+  }
+
+  .ch-toggle input:checked ~ .ch-toggle-track .ch-toggle-thumb {
+    transform: translateX(20px);
+  }
+  /* ── End nav bar ──────────────────────────────────── */
+
+
+        [data-theme="light"] pre {
+      background: #ede9f8;
+      border-color: #d0c6ed;
+      color: #2d1b69;
+    }
+
+    [data-theme="light"] .kw { color: #7c3aed; }
+    [data-theme="light"] .fn { color: #2563a8; }
+    [data-theme="light"] .st { color: #c4622d; }
+    [data-theme="light"] .nm { color: #d97706; }
+    [data-theme="light"] .cm { color: #9b8cc0; font-style: italic; }
+    [data-theme="light"] .op { color: #8b7ab8; }
+    [data-theme="light"] .tp { color: #0f766e; }
+
+    [data-theme="light"] code {
+      background: #e8e2f5;
+      border-color: #d0c6ed;
+      color: #7c3aed;
+    }
+
+    [data-theme="light"] .good {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    [data-theme="light"] .warn {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    [data-theme="light"] th {
+      color: var(--accent-clr, #9b7fe8);
+    }
+
+    [data-theme="light"] .section-title {
+      color: var(--accent-clr, #9b7fe8);
+    }
+
+    [data-theme="light"] header h1 span {
+      color: var(--accent-clr, #9b7fe8);
+    }
+    [data-theme="light"] .tag-basic { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-index { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-method { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-format { background: #fce7f3; color: #9d174d; }
+  [data-theme="light"] .tag-check { background: #d1fae5; color: #065f46; }
+  [data-theme="light"] .tag-split { background: #fce7f3; color: #9d174d; }
+  [data-theme="light"] .tag-tip { background: #d1fae5; color: #065f46; }
+</style>
+</head>
+<body>
+<nav class="ch-nav">
+  <a class="ch-back" href="index.html">← Index</a>
+  <div class="ch-toggle-wrap">
+    <span class="ch-toggle-label" id="ch-theme-label">DARK</span>
+    <label class="ch-toggle" aria-label="Toggle theme">
+      <input type="checkbox" id="ch-theme-toggle">
+      <div class="ch-toggle-track">
+        <div class="ch-toggle-thumb" id="ch-thumb">☽</div>
+      </div>
+    </label>
+  </div>
+</nav>
+
+<header>
+  <h1>Python → <span>Strings</span></h1>
+  <p>Chapter — Quick Revision Cheat Sheet</p>
+</header>
+
+<!-- BASICS -->
+<div class="section">
+  <div class="section-title">basics</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-basic">STR</span> Creating Strings</div>
+    <pre>s1 <span class="op">=</span> <span class="st">'hello'</span>
+s2 <span class="op">=</span> <span class="st">"hello"</span>
+s3 <span class="op">=</span> <span class="st">"""multi
+line
+string"""</span>
+s4 <span class="op">=</span> <span class="st">'''also
+multiline'''</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(s1))    <span class="cm"># &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">len</span>(s1))     <span class="cm"># 5</span></pre>
+    <div class="note"><strong>Key:</strong> Strings are immutable — you cannot change characters in-place; every operation returns a new string</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-basic">STR</span> Escape Characters</div>
+    <pre><span class="fn">print</span>(<span class="st">"Hello\nWorld"</span>)   <span class="cm"># newline</span>
+<span class="fn">print</span>(<span class="st">"Tab\there"</span>)     <span class="cm"># tab</span>
+<span class="fn">print</span>(<span class="st">"Say \"hi\""</span>)    <span class="cm"># escaped quote</span>
+<span class="fn">print</span>(<span class="st">"C:\\Users"</span>)     <span class="cm"># backslash</span>
+
+<span class="cm"># Raw string — ignores escape sequences</span>
+path <span class="op">=</span> <span class="st">r"C:\Users\data"</span>   <span class="cm"># r prefix</span></pre>
+  </div>
+</div>
+
+<!-- INDEXING & SLICING -->
+<div class="section">
+  <div class="section-title">indexing & slicing</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-index">INDEX</span> Indexing & Slicing</div>
+    <pre>s <span class="op">=</span> <span class="st">"Python"</span>
+<span class="cm">#    0 1 2 3 4 5   ← positive</span>
+<span class="cm">#   -6-5-4-3-2-1   ← negative</span>
+
+s[<span class="nm">0</span>]      <span class="cm"># 'P'</span>
+s[<span class="op">-</span><span class="nm">1</span>]     <span class="cm"># 'n'</span>
+s[<span class="nm">1</span>:<span class="nm">4</span>]    <span class="cm"># 'yth'</span>
+s[:<span class="nm">3</span>]     <span class="cm"># 'Pyt'</span>
+s[<span class="nm">3</span>:]     <span class="cm"># 'hon'</span>
+s[::<span class="op">-</span><span class="nm">1</span>]   <span class="cm"># 'nohtyP'  — reversed</span>
+s[::<span class="nm">2</span>]    <span class="cm"># 'Pto'     — every 2nd char</span></pre>
+    <div class="note"><strong>Key:</strong> Strings support all the same slicing as lists — and always return a new string</div>
+  </div>
+</div>
+
+<!-- CASE METHODS -->
+<div class="section">
+  <div class="section-title">case methods</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-method">CASE</span> All Case Methods</div>
+    <pre>s <span class="op">=</span> <span class="st">"hello world"</span>
+
+s.<span class="fn">upper</span>()        <span class="cm"># "HELLO WORLD"</span>
+s.<span class="fn">lower</span>()        <span class="cm"># "hello world"</span>
+s.<span class="fn">title</span>()        <span class="cm"># "Hello World"   — each word capitalised</span>
+s.<span class="fn">capitalize</span>()   <span class="cm"># "Hello world"   — only first char</span>
+s.<span class="fn">swapcase</span>()     <span class="cm"># "HELLO WORLD" → "hello world"</span></pre>
+  </div>
+</div>
+
+<!-- STRIP / CLEAN -->
+<div class="section">
+  <div class="section-title">strip & clean</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-method">STRIP</span> strip / lstrip / rstrip</div>
+    <pre>s <span class="op">=</span> <span class="st">"  hello world  "</span>
+
+s.<span class="fn">strip</span>()     <span class="cm"># "hello world"   — both sides</span>
+s.<span class="fn">lstrip</span>()    <span class="cm"># "hello world  " — left only</span>
+s.<span class="fn">rstrip</span>()    <span class="cm"># "  hello world" — right only</span>
+
+<span class="cm"># Strip specific characters</span>
+<span class="st">"##hello##"</span>.<span class="fn">strip</span>(<span class="st">"#"</span>)    <span class="cm"># "hello"</span>
+<span class="st">"xxhelloxx"</span>.<span class="fn">strip</span>(<span class="st">"x"</span>)    <span class="cm"># "hello"</span></pre>
+    <div class="note"><strong>Real World Use:</strong> Cleaning user input, stripping newlines from file lines</div>
+  </div>
+</div>
+
+<!-- FIND & REPLACE -->
+<div class="section">
+  <div class="section-title">find, replace & check</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-method">FIND</span> find / index / count / replace</div>
+    <pre>s <span class="op">=</span> <span class="st">"hello world hello"</span>
+
+s.<span class="fn">find</span>(<span class="st">"hello"</span>)       <span class="cm"># 0    — first occurrence index</span>
+s.<span class="fn">find</span>(<span class="st">"xyz"</span>)         <span class="cm"># -1   — returns -1 if not found</span>
+s.<span class="fn">index</span>(<span class="st">"world"</span>)      <span class="cm"># 6    — like find but raises ValueError</span>
+s.<span class="fn">rfind</span>(<span class="st">"hello"</span>)      <span class="cm"># 12   — last occurrence</span>
+s.<span class="fn">count</span>(<span class="st">"hello"</span>)      <span class="cm"># 2    — how many times</span>
+s.<span class="fn">replace</span>(<span class="st">"hello"</span>, <span class="st">"hi"</span>)       <span class="cm"># "hi world hi"</span>
+s.<span class="fn">replace</span>(<span class="st">"hello"</span>, <span class="st">"hi"</span>, <span class="nm">1</span>)    <span class="cm"># "hi world hello" — max 1 replace</span></pre>
+    <div class="note"><strong>find vs index:</strong> find() returns -1 if not found; index() raises ValueError — use find() when unsure</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-check">CHECK</span> startswith / endswith / in</div>
+    <pre>s <span class="op">=</span> <span class="st">"hello world"</span>
+
+s.<span class="fn">startswith</span>(<span class="st">"hello"</span>)   <span class="cm"># True</span>
+s.<span class="fn">endswith</span>(<span class="st">"world"</span>)     <span class="cm"># True</span>
+<span class="st">"world"</span> <span class="kw">in</span> s             <span class="cm"># True</span>
+<span class="st">"xyz"</span> <span class="kw">in</span> s               <span class="cm"># False</span>
+
+<span class="cm"># Check multiple prefixes/suffixes</span>
+s.<span class="fn">startswith</span>((<span class="st">"hello"</span>, <span class="st">"hi"</span>))   <span class="cm"># True — tuple of options</span>
+s.<span class="fn">endswith</span>((<span class="st">".txt"</span>, <span class="st">".csv"</span>))    <span class="cm"># False</span></pre>
+  </div>
+</div>
+
+<!-- SPLIT & JOIN -->
+<div class="section">
+  <div class="section-title">split & join</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-split">SPLIT</span> split() — string to list</div>
+    <pre>s <span class="op">=</span> <span class="st">"apple,banana,mango"</span>
+
+s.<span class="fn">split</span>(<span class="st">","</span>)          <span class="cm"># ['apple', 'banana', 'mango']</span>
+s.<span class="fn">split</span>(<span class="st">","</span>, <span class="nm">1</span>)       <span class="cm"># ['apple', 'banana,mango'] — max 1 split</span>
+
+<span class="st">"hello world"</span>.<span class="fn">split</span>()  <span class="cm"># ['hello', 'world'] — splits on whitespace</span>
+<span class="st">"a  b  c"</span>.<span class="fn">split</span>()      <span class="cm"># ['a', 'b', 'c'] — multiple spaces handled</span>
+
+<span class="cm"># Split lines</span>
+<span class="st">"line1\nline2\nline3"</span>.<span class="fn">splitlines</span>()
+<span class="cm"># ['line1', 'line2', 'line3']</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-split">JOIN</span> join() — list to string</div>
+    <pre>words <span class="op">=</span> [<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"mango"</span>]
+
+<span class="st">","</span>.<span class="fn">join</span>(words)     <span class="cm"># "apple,banana,mango"</span>
+<span class="st">" "</span>.<span class="fn">join</span>(words)    <span class="cm"># "apple banana mango"</span>
+<span class="st">""</span>.<span class="fn">join</span>(words)     <span class="cm"># "applebananamango"</span>
+<span class="st">" | "</span>.<span class="fn">join</span>(words)  <span class="cm"># "apple | banana | mango"</span>
+
+<span class="cm"># Join characters back</span>
+<span class="st">""</span>.<span class="fn">join</span>([<span class="st">"P"</span>, <span class="st">"y"</span>, <span class="st">"t"</span>])   <span class="cm"># "Pyt"</span></pre>
+    <div class="note"><strong>Key:</strong> join() is called on the separator, not the list — <code>separator.join(list)</code></div>
+  </div>
+</div>
+
+<!-- STRING FORMATTING -->
+<div class="section">
+  <div class="section-title">string formatting</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-format">FORMAT</span> All Formatting Styles</div>
+    <pre>name  <span class="op">=</span> <span class="st">"Bob"</span>
+score <span class="op">=</span> <span class="nm">95.678</span>
+num   <span class="op">=</span> <span class="nm">1000000</span>
+
+<span class="cm"># f-string (Python 3.6+) — recommended</span>
+<span class="st">f"Hello </span><span class="op">{</span>name<span class="op">}</span><span class="st">, score: </span><span class="op">{</span>score<span class="op">:.2</span>f<span class="op">}</span><span class="st">"</span>   <span class="cm"># "Hello Bob, score: 95.68"</span>
+<span class="st">f"</span><span class="op">{</span>num<span class="op">:,}</span><span class="st">"</span>                            <span class="cm"># "1,000,000"</span>
+<span class="st">f"</span><span class="op">{</span>score<span class="op">:.0</span>f<span class="op">}</span><span class="st">"</span>                         <span class="cm"># "96"</span>
+<span class="st">f"</span><span class="op">{</span>name<span class="op">:&gt;10}</span><span class="st">"</span>                          <span class="cm"># "       Bob"  right-align</span>
+<span class="st">f"</span><span class="op">{</span>name<span class="op">:&lt;10}</span><span class="st">"</span>                          <span class="cm"># "Bob       "  left-align</span>
+<span class="st">f"</span><span class="op">{</span>name<span class="op">:^10}</span><span class="st">"</span>                          <span class="cm"># "   Bob    "  center</span>
+<span class="st">f"</span><span class="op">{</span>num<span class="op">:0&gt;8}</span><span class="st">"</span>                           <span class="cm"># "00001000"    zero-pad</span>
+
+<span class="cm"># .format() style</span>
+<span class="st">"Hello {}, score: {:.2f}"</span>.<span class="fn">format</span>(name, score)
+
+<span class="cm"># % style (old)</span>
+<span class="st">"Hello %s, score: %.2f"</span> <span class="op">%</span> (name, score)</pre>
+    <div class="good">Always prefer f-strings — fastest, most readable, supports expressions</div>
+  </div>
+</div>
+
+<!-- IS* CHECK METHODS -->
+<div class="section">
+  <div class="section-title">is* check methods</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-check">IS*</span> Boolean Check Methods</div>
+    <table>
+      <tr><th>Method</th><th>Returns True when</th><th>Example</th></tr>
+      <tr><td>isalpha()</td><td class="plain">Only letters</td><td>"hello".isalpha() → True</td></tr>
+      <tr><td>isdigit()</td><td class="plain">Only digits</td><td>"123".isdigit() → True</td></tr>
+      <tr><td>isalnum()</td><td class="plain">Letters and digits</td><td>"abc123".isalnum() → True</td></tr>
+      <tr><td>isspace()</td><td class="plain">Only whitespace</td><td>"  ".isspace() → True</td></tr>
+      <tr><td>isupper()</td><td class="plain">All uppercase</td><td>"HELLO".isupper() → True</td></tr>
+      <tr><td>islower()</td><td class="plain">All lowercase</td><td>"hello".islower() → True</td></tr>
+      <tr><td>istitle()</td><td class="plain">Title case</td><td>"Hello World".istitle() → True</td></tr>
+      <tr><td>isnumeric()</td><td class="plain">Numeric characters</td><td>"²".isnumeric() → True</td></tr>
+    </table>
+    <div class="warn">All is*() methods return False on empty string — "".isalpha() → False</div>
+  </div>
+</div>
+
+<!-- OTHER USEFUL METHODS -->
+<div class="section">
+  <div class="section-title">other useful methods</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-method">OTHER</span> zfill, center, ljust, rjust</div>
+    <pre><span class="st">"42"</span>.<span class="fn">zfill</span>(<span class="nm">5</span>)          <span class="cm"># "00042"  — zero pad to width 5</span>
+<span class="st">"hi"</span>.<span class="fn">center</span>(<span class="nm">10</span>)        <span class="cm"># "    hi    "</span>
+<span class="st">"hi"</span>.<span class="fn">center</span>(<span class="nm">10</span>, <span class="st">"*"</span>)   <span class="cm"># "****hi****"</span>
+<span class="st">"hi"</span>.<span class="fn">ljust</span>(<span class="nm">10</span>, <span class="st">"-"</span>)    <span class="cm"># "hi--------"</span>
+<span class="st">"hi"</span>.<span class="fn">rjust</span>(<span class="nm">10</span>, <span class="st">"-"</span>)    <span class="cm"># "--------hi"</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-method">OTHER</span> encode / decode & ord / chr</div>
+    <pre><span class="cm"># Encode string to bytes</span>
+<span class="st">"hello"</span>.<span class="fn">encode</span>(<span class="st">"utf-8"</span>)     <span class="cm"># b'hello'</span>
+<span class="nm">b</span><span class="st">"hello"</span>.<span class="fn">decode</span>(<span class="st">"utf-8"</span>)   <span class="cm"># "hello"</span>
+
+<span class="cm"># Character ↔ ASCII</span>
+<span class="fn">ord</span>(<span class="st">"A"</span>)    <span class="cm"># 65  — char to ASCII code</span>
+<span class="fn">chr</span>(<span class="nm">65</span>)     <span class="cm"># 'A' — ASCII code to char</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-tip">CONCAT</span> Concatenation & Repetition</div>
+    <pre><span class="st">"Hello"</span> <span class="op">+</span> <span class="st">" "</span> <span class="op">+</span> <span class="st">"World"</span>   <span class="cm"># "Hello World"</span>
+<span class="st">"ha"</span> <span class="op">*</span> <span class="nm">3</span>                    <span class="cm"># "hahaha"</span>
+
+<span class="cm"># Fast concatenation of many strings — use join()</span>
+parts <span class="op">=</span> [<span class="st">"Hello"</span>, <span class="st">"World"</span>, <span class="st">"!"</span>]
+result <span class="op">=</span> <span class="st">" "</span>.<span class="fn">join</span>(parts)      <span class="cm"># "Hello World !"</span></pre>
+    <div class="warn">Never use + in a loop to build strings — O(n²); use join() or list then join at end</div>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="section">
+  <div class="section-title">quick reference</div>
+  <div class="card">
+    <table>
+      <tr><th>Goal</th><th>Method</th><th>Returns</th></tr>
+      <tr><td class="plain">Uppercase</td><td>s.upper()</td><td>new str</td></tr>
+      <tr><td class="plain">Lowercase</td><td>s.lower()</td><td>new str</td></tr>
+      <tr><td class="plain">Title case</td><td>s.title()</td><td>new str</td></tr>
+      <tr><td class="plain">Strip whitespace</td><td>s.strip()</td><td>new str</td></tr>
+      <tr><td class="plain">Find substring index</td><td>s.find(sub)</td><td>int (-1 if missing)</td></tr>
+      <tr><td class="plain">Count occurrences</td><td>s.count(sub)</td><td>int</td></tr>
+      <tr><td class="plain">Replace</td><td>s.replace(old, new)</td><td>new str</td></tr>
+      <tr><td class="plain">Split to list</td><td>s.split(sep)</td><td>list</td></tr>
+      <tr><td class="plain">Join list to string</td><td>sep.join(list)</td><td>new str</td></tr>
+      <tr><td class="plain">Starts with?</td><td>s.startswith(sub)</td><td>bool</td></tr>
+      <tr><td class="plain">Ends with?</td><td>s.endswith(sub)</td><td>bool</td></tr>
+      <tr><td class="plain">Only digits?</td><td>s.isdigit()</td><td>bool</td></tr>
+      <tr><td class="plain">Reverse string</td><td>s[::-1]</td><td>new str</td></tr>
+      <tr><td class="plain">Zero pad</td><td>s.zfill(n)</td><td>new str</td></tr>
+      <tr><td class="plain">Split by lines</td><td>s.splitlines()</td><td>list</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+  const _t = document.getElementById('ch-theme-toggle');
+  const _h = document.documentElement;
+  const _l = document.getElementById('ch-theme-label');
+  const _i = document.getElementById('ch-thumb');
+  _t.addEventListener('change', () => {
+    if (_t.checked) {
+      _h.setAttribute('data-theme','light');
+      _l.textContent = 'LIGHT'; _i.textContent = '☀';
+    } else {
+      _h.setAttribute('data-theme','dark');
+      _l.textContent = 'DARK'; _i.textContent = '☽';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --bg:           #f4f2ff;
+    --bg-card:      #ffffff;
+    --bg-card-2:    #fefefe;
+    --border:       #e4dff7;
+    --border-hover: #c5b8f0;
+    --text-1:       #1e1040;
+    --text-2:       #6b5ea8;
+    --text-3:       #b0a4d8;
+    --accent:       #7c5cbf;
+    --accent-2:     #a78bfa;
+    --dot-color:    rgba(124,92,191,0.12);
+    --shine:        rgba(255,255,255,0.92);
+    --edge:         rgba(100,70,180,0.15);
+    --shadow:       rgba(80,50,160,0.12);
+    --tag-bg:       rgba(124,92,191,0.08);
+    --tag-text:     #6b46c1;
+    --tag-border:   rgba(124,92,191,0.18);
+    --stripe-op:    0.85;
+  }
+
+  [data-theme="dark"] {
+    --bg:           #0f0d18;
+    --bg-card:      #1a1730;
+    --bg-card-2:    #1e1b34;
+    --border:       #2d2850;
+    --border-hover: #4a4080;
+    --text-1:       #ede8ff;
+    --text-2:       #8878c0;
+    --text-3:       #44395a;
+    --accent:       #a78bfa;
+    --accent-2:     #c4b5fd;
+    --dot-color:    rgba(167,139,250,0.06);
+    --shine:        rgba(255,255,255,0.04);
+    --edge:         rgba(0,0,0,0.4);
+    --shadow:       rgba(0,0,0,0.4);
+    --tag-bg:       rgba(167,139,250,0.08);
+    --tag-text:     #a78bfa;
+    --tag-border:   rgba(167,139,250,0.2);
+    --stripe-op:    0.7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s, color 0.4s;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: radial-gradient(circle, var(--dot-color) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative; z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+  }
+
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+
+  .brand-pip {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%      { transform: scale(0.6); opacity: 0.4; }
+  }
+
+  .brand-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--text-2);
+  }
+
+  .toggle-wrap { display: flex; align-items: center; gap: 0.5rem; }
+
+  .toggle-lbl {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 1px; color: var(--text-2);
+  }
+
+  .tog { position: relative; width: 46px; height: 26px; cursor: pointer; }
+  .tog input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .tog-track {
+    position: absolute; inset: 0;
+    background: var(--border); border-radius: 100px;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; padding: 0 4px;
+    transition: background 0.3s;
+  }
+  .tog-thumb {
+    width: 17px; height: 17px; border-radius: 50%;
+    background: var(--accent);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: #fff;
+    box-shadow: 0 1px 4px var(--shadow);
+  }
+  .tog input:checked ~ .tog-track .tog-thumb { transform: translateX(20px); }
+
+  /* HERO */
+  .hero {
+    margin-bottom: 3.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 2rem;
+  }
+
+  .hero-title {
+    font-family: 'Kalam', cursive;
+    font-size: clamp(3rem, 7vw, 5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--text-1);
+  }
+
+  .hero-title .hl {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero-title .hl::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    opacity: 0.3;
+    transform: rotate(-0.5deg);
+  }
+
+  .hero-sub {
+    font-size: 0.85rem;
+    color: var(--text-2);
+    margin-top: 0.9rem;
+    display: flex; align-items: center;
+    gap: 0.7rem; flex-wrap: wrap;
+  }
+
+  .hero-pill {
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    color: var(--tag-text);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .hero-doodle { opacity: 0.16; flex-shrink: 0; color: var(--accent); }
+  [data-theme="dark"] .hero-doodle { opacity: 0.07; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 5px;
+    text-transform: uppercase; color: var(--text-3);
+    margin-bottom: 1.4rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    perspective: 1400px;
+    align-items: stretch;
+  }
+
+  @media (max-width: 780px) { .grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-doodle { display: none; }
+    .topbar { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  }
+
+  /* CARD WRAP */
+  .card-wrap {
+    border-radius: 18px; height: 100%;
+    opacity: 0; transform: translateY(18px);
+    animation: rise 0.45s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  .card-wrap:nth-child(1)  { animation-delay: .03s }
+  .card-wrap:nth-child(2)  { animation-delay: .07s }
+  .card-wrap:nth-child(3)  { animation-delay: .11s }
+  .card-wrap:nth-child(4)  { animation-delay: .15s }
+  .card-wrap:nth-child(5)  { animation-delay: .19s }
+  .card-wrap:nth-child(6)  { animation-delay: .23s }
+  .card-wrap:nth-child(7)  { animation-delay: .27s }
+  .card-wrap:nth-child(8)  { animation-delay: .31s }
+  .card-wrap:nth-child(9)  { animation-delay: .35s }
+  .card-wrap:nth-child(10) { animation-delay: .39s }
+  .card-wrap:nth-child(11) { animation-delay: .43s }
+  .card-wrap:nth-child(12) { animation-delay: .47s }
+  .card-wrap:nth-child(13) { animation-delay: .51s }
+  .card-wrap:nth-child(14) { animation-delay: .55s }
+
+  /* CARD */
+  .card {
+    display: flex; flex-direction: column;
+    text-decoration: none;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    padding: 1.5rem 1.4rem 1.4rem;
+    height: 100%;
+    position: relative; overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.25s, background 0.25s;
+    transform-style: preserve-3d;
+    will-change: transform;
+    box-shadow:
+      1px 1px 0 var(--edge),
+      2px 2px 0 var(--edge),
+      3px 3px 0 var(--edge),
+      4px 4px 0 var(--edge),
+      5px 5px 0 var(--edge),
+      6px 6px 10px var(--shadow);
+  }
+
+  .card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(180deg, var(--shine) 0%, transparent 100%);
+    border-radius: 18px 18px 0 0;
+    opacity: 0.45; pointer-events: none;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, var(--accent)), transparent);
+    opacity: 0; transition: opacity 0.3s; z-index: 2;
+  }
+
+  .card:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-card-2);
+    box-shadow:
+      1px 1px 0 var(--edge), 2px 2px 0 var(--edge),
+      3px 3px 0 var(--edge), 4px 4px 0 var(--edge),
+      5px 5px 0 var(--edge), 6px 6px 0 var(--edge),
+      8px 8px 18px var(--shadow);
+  }
+
+  .card:hover::before { opacity: 0.7; }
+
+  .stripe {
+    position: absolute; top: 0; left: 0; right: 0; height: 3.5px;
+    border-radius: 18px 18px 0 0;
+    background: var(--accent-color, var(--accent));
+    opacity: var(--stripe-op);
+  }
+
+  .ch-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 2px;
+    color: var(--text-3); text-transform: uppercase;
+    margin-bottom: 0.85rem;
+    transition: color 0.2s; position: relative; z-index: 1;
+  }
+  .card:hover .ch-num { color: var(--accent-color, var(--accent)); }
+
+  .ch-icon {
+    font-size: 1.7rem; line-height: 1;
+    display: block; margin-bottom: 0.75rem;
+    position: relative; z-index: 1;
+    transition: transform 0.3s cubic-bezier(.2,.8,.2,1);
+  }
+  .card:hover .ch-icon { transform: translateY(-4px); }
+
+  .ch-title {
+    font-family: 'Kalam', cursive;
+    font-size: 1.05rem; font-weight: 400;
+    color: var(--text-1); line-height: 1.35;
+    margin-bottom: 0.75rem;
+    position: relative; z-index: 1;
+  }
+
+  .topics {
+    display: flex; flex-wrap: wrap; gap: 0.28rem;
+    margin-top: auto; position: relative; z-index: 1;
+  }
+
+  .tag {
+    font-size: 0.58rem;
+    font-family: 'Space Mono', monospace;
+    background: var(--tag-bg); color: var(--tag-text);
+    border: 1px solid var(--tag-border);
+    border-radius: 5px; padding: 2px 7px;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .card:hover .tag {
+    background: color-mix(in srgb, var(--accent-color, var(--accent)) 12%, transparent);
+    border-color: color-mix(in srgb, var(--accent-color, var(--accent)) 30%, transparent);
+    color: color-mix(in srgb, var(--accent-color, var(--accent)) 90%, var(--text-2));
+  }
+
+  .arrow {
+    position: absolute; bottom: 1.2rem; right: 1.3rem;
+    font-size: 0.85rem;
+    color: var(--accent-color, var(--accent));
+    opacity: 0; transform: translate(-5px, 5px);
+    transition: opacity 0.2s, transform 0.2s; z-index: 1;
+  }
+  .card:hover .arrow { opacity: 0.75; transform: translate(0,0); }
+
+  /* FOOTER */
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center;
+    justify-content: space-between;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem; color: var(--text-3);
+  }
+
+  .footer-pill {
+    background: var(--tag-bg); border: 1px solid var(--tag-border);
+    color: var(--tag-text); padding: 3px 12px;
+    border-radius: 100px; font-size: 0.58rem; letter-spacing: 1px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-pip"></span>
+      <span class="brand-label">Revision Notes · Python</span>
+    </div>
+    <div class="toggle-wrap">
+      <span class="toggle-lbl" id="tog-label">LIGHT</span>
+      <label class="tog" aria-label="Toggle theme">
+        <input type="checkbox" id="tog-input">
+        <div class="tog-track">
+          <div class="tog-thumb" id="tog-thumb">☀</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <h1 class="hero-title">Python<br><span class="hl">Quick</span> Reference</h1>
+      <div class="hero-sub">
+        <span class="hero-pill">14 chapters</span>
+        <span class="hero-pill">every topic covered</span>
+      </div>
+    </div>
+    <svg class="hero-doodle" width="110" height="100" viewBox="0 0 110 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="82" cy="20" r="16" stroke="currentColor" stroke-width="1.4" stroke-dasharray="5 3"/>
+      <circle cx="20" cy="74" r="11" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <path d="M8 8 Q26 2 24 22 Q22 42 44 36" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+      <circle cx="55" cy="55" r="3.5" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>
+      <circle cx="100" cy="68" r="6" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2"/>
+      <path d="M48 84 Q62 76 72 88" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+      <circle cx="16" cy="26" r="2.5" fill="currentColor" opacity="0.5"/>
+      <circle cx="92" cy="46" r="2" fill="currentColor" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <div class="section-label">Chapters</div>
+
+  <div class="grid">
+
+    <div class="card-wrap">
+      <a class="card" href="ch1_cheatsheet.html" style="--accent-color:#818cf8;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 01</span>
+        <span class="ch-icon">🔢</span>
+        <div class="ch-title">Variables, Data Types, Print &amp; Numbers</div>
+        <div class="topics">
+          <span class="tag">dynamic typing</span><span class="tag">casting</span>
+          <span class="tag">f-strings</span><span class="tag">math module</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch2_cheatsheet.html" style="--accent-color:#34d399;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 02</span>
+        <span class="ch-icon">🔀</span>
+        <div class="ch-title">If / Else, Nested If, Match</div>
+        <div class="topics">
+          <span class="tag">if · elif</span><span class="tag">ternary</span>
+          <span class="tag">and/or/not</span><span class="tag">match</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch3_cheatsheet.html" style="--accent-color:#fb923c;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 03</span>
+        <span class="ch-icon">🔁</span>
+        <div class="ch-title">Loops &amp; range()</div>
+        <div class="topics">
+          <span class="tag">for · while</span><span class="tag">range</span>
+          <span class="tag">break</span><span class="tag">enumerate</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch4_cheatsheet.html" style="--accent-color:#f472b6;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 04</span>
+        <span class="ch-icon">⚡</span>
+        <div class="ch-title">Functions, *args, **kwargs, Scope</div>
+        <div class="topics">
+          <span class="tag">def · return</span><span class="tag">*args</span>
+          <span class="tag">LEGB</span><span class="tag">lambda</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch5_cheatsheet.html" style="--accent-color:#60a5fa;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 05</span>
+        <span class="ch-icon">📋</span>
+        <div class="ch-title">Lists</div>
+        <div class="topics">
+          <span class="tag">indexing</span><span class="tag">slicing</span>
+          <span class="tag">methods</span><span class="tag">comprehension</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch6_cheatsheet.html" style="--accent-color:#facc15;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 06</span>
+        <span class="ch-icon">📦</span>
+        <div class="ch-title">Dictionaries</div>
+        <div class="topics">
+          <span class="tag">CRUD</span><span class="tag">get</span>
+          <span class="tag">views</span><span class="tag">dict comp</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch7_cheatsheet.html" style="--accent-color:#a78bfa;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 07</span>
+        <span class="ch-icon">🔷</span>
+        <div class="ch-title">Sets + Tuples</div>
+        <div class="topics">
+          <span class="tag">set ops</span><span class="tag">frozenset</span>
+          <span class="tag">unpacking</span><span class="tag">immutability</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch8_cheatsheet.html" style="--accent-color:#22d3ee;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 08</span>
+        <span class="ch-icon">λ</span>
+        <div class="ch-title">Lambda</div>
+        <div class="topics">
+          <span class="tag">lambda</span><span class="tag">map · filter</span>
+          <span class="tag">sorted key</span><span class="tag">reduce</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch9_cheatsheet.html" style="--accent-color:#4ade80;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 09</span>
+        <span class="ch-icon">📂</span>
+        <div class="ch-title">File I/O</div>
+        <div class="topics">
+          <span class="tag">open · modes</span><span class="tag">read · write</span>
+          <span class="tag">with</span><span class="tag">pathlib</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch10_cheatsheet.html" style="--accent-color:#fb923c;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 10</span>
+        <span class="ch-icon">📊</span>
+        <div class="ch-title">CSV</div>
+        <div class="topics">
+          <span class="tag">reader · writer</span><span class="tag">DictReader</span>
+          <span class="tag">delimiter</span><span class="tag">newline</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch11_cheatsheet.html" style="--accent-color:#818cf8;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 11</span>
+        <span class="ch-icon">📦</span>
+        <div class="ch-title">Modules</div>
+        <div class="topics">
+          <span class="tag">import · from</span><span class="tag">__name__</span>
+          <span class="tag">stdlib</span><span class="tag">pip</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch12_cheatsheet.html" style="--accent-color:#f87171;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 12</span>
+        <span class="ch-icon">🚨</span>
+        <div class="ch-title">Try / Except</div>
+        <div class="topics">
+          <span class="tag">try · except</span><span class="tag">finally</span>
+          <span class="tag">raise</span><span class="tag">custom errors</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch13_cheatsheet.html" style="--accent-color:#22d3ee;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · 13</span>
+        <span class="ch-icon">🗂️</span>
+        <div class="ch-title">JSON</div>
+        <div class="topics">
+          <span class="tag">loads · dumps</span><span class="tag">load · dump</span>
+          <span class="tag">type mapping</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="card-wrap">
+      <a class="card" href="ch_strings_cheatsheet.html" style="--accent-color:#86efac;">
+        <div class="stripe"></div>
+        <span class="ch-num">Ch · STR</span>
+        <span class="ch-icon">🔤</span>
+        <div class="ch-title">Strings</div>
+        <div class="topics">
+          <span class="tag">indexing</span><span class="tag">slicing</span>
+          <span class="tag">case</span><span class="tag">strip</span>
+          <span class="tag">find · replace</span><span class="tag">split · join</span>
+          <span class="tag">f-strings</span>
+        </div>
+        <span class="arrow">↗</span>
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Python Revision Notes</span>
+    <span class="footer-pill">14 cheatsheets</span>
+  </footer>
+
+</div>
+
+<script>
+  const inp   = document.getElementById('tog-input');
+  const root  = document.documentElement;
+  const lbl   = document.getElementById('tog-label');
+  const thumb = document.getElementById('tog-thumb');
+
+  root.setAttribute('data-theme', 'light');
+
+  inp.addEventListener('change', () => {
+    const dark = inp.checked;
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    lbl.textContent   = dark ? 'DARK' : 'LIGHT';
+    thumb.textContent = dark ? '☽' : '☀';
+  });
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - 0.5;
+      const y = (e.clientY - r.top)  / r.height - 0.5;
+      card.style.transform = `translateY(-6px) translateX(-2px) rotateX(${-y*9}deg) rotateY(${x*9}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+</script>
+</body>
+</html>

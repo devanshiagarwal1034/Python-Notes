@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Nunito:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python → Sets + Tuples</title>
+<style>
+  /* ── Theme variables ─────────────────────────────── */
+    :root {
+    --bg:            #161320;
+    --bg-card:       #201d2e;
+    --bg-deep:       #1a1728;
+    --bg-subtle:     #1c1928;
+    --bg-inline:     #1a172a;
+    --border:        #2e2840;
+    --border-subtle: #3a3358;
+    --border-note:   #3a3358;
+    --text-primary:  #f0eaf8;
+    --text-white:    #f0eaf8;
+    --text-heading:  #f0eaf8;
+    --text-secondary:#9080b0;
+    --text-muted:    #4a4065;
+    --text-table:    #d0c8e8;
+    --text-comment:  #5a5080;
+    --color-code:    #c084fc;
+    --grid-line:     rgba(200,180,255,0.025);
+    --toggle-bg:     #2a2438;
+    --accent-clr:    #c084fc;
+  }
+
+      [data-theme="light"] {
+    --bg:            #f8f5ff;
+    --bg-card:       #ffffff;
+    --bg-deep:       #ede9f8;
+    --bg-subtle:     #f3f0fc;
+    --bg-inline:     #e8e2f5;
+    --border:        #e2d9f3;
+    --border-subtle: #d0c6ed;
+    --border-note:   #d0c6ed;
+    --text-primary:  #2d1b69;
+    --text-white:    #2d1b69;
+    --text-heading:  #2d1b69;
+    --text-secondary:#7a6aaa;
+    --text-muted:    #b0a4d8;
+    --text-table:    #3d2d6e;
+    --text-comment:  #9b8cc0;
+    --color-code:    #7c3aed;
+    --grid-line:     rgba(140,100,220,0.06);
+    --toggle-bg:     #e2d9f3;
+    --accent-clr:    #9b7fe8;
+  }
+  /* ── End theme variables ──────────────────────────── */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 { font-family: 'Kalam', cursive; font-size: 2.2rem; font-weight: 400; color: var(--text-white); letter-spacing: -0.5px; }
+  header h1 span { color: var(--color-code); }
+  header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.4rem; }
+
+  .section { margin-bottom: 3rem; }
+
+  .section-title {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--color-code); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 1.2rem;
+  }
+
+      .card-title {
+      font-family: 'Kalam', cursive;
+      font-size: 1rem;
+      font-weight: 400; color: var(--text-heading);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+
+  .tag {
+    font-size: 0.6rem; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 3px;
+  }
+
+  .tag-set    { background: #2a1e3a; color: var(--color-code); }
+  .tag-setop  { background: #1e3a2a; color: #34d399; }
+  .tag-tup    { background: #1e3a5f; color: #60a5fa; }
+  .tag-unpack { background: #3a2a1e; color: #fb923c; }
+  .tag-frozen { background: #3a1e2a; color: #f87171; }
+  .tag-tip    { background: #2a2a1e; color: #facc15; }
+
+  pre {
+    background: var(--bg-deep); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-clr, #9b7fe8); border-radius: 7px;
+    padding: 1.1rem 1.4rem; font-family: 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.85; overflow-x: auto; margin: 0.7rem 0;
+  }
+
+  .kw  { color: #c084fc; font-weight: 600; }
+  .fn  { color: #60a5fa; }
+  .st  { color: #86efac; }
+  .nm  { color: #fb923c; }
+  .cm  { color: var(--text-comment); font-style: italic; }
+  .op  { color: #64748b; }
+
+  .note {
+    font-size: 0.82rem; color: var(--text-muted); margin-top: 0.7rem;
+    padding: 0.6rem 1rem; background: var(--bg-subtle);
+    border-left: 2px solid var(--border-note); border-radius: 0 5px 5px 0;
+  }
+  .note strong { color: #fb923c; }
+
+  .warn {
+    background: #1a1200; border: 1px solid #78350f; border-radius: 6px;
+    padding: 0.7rem 1.1rem; font-size: 0.83rem; color: #fcd34d; margin-top: 0.7rem;
+  }
+  .warn::before { content: '⚠  '; }
+
+  .good {
+    background: #001a0d; border: 1px solid #14532d; border-radius: 6px;
+    padding: 0.7rem 1.1rem; font-size: 0.83rem; color: #6ee7b7; margin-top: 0.7rem;
+  }
+  .good::before { content: '✓  '; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.7rem; }
+
+  th {
+    background: var(--bg-deep); color: var(--color-code); font-weight: 700;
+    padding: 0.6rem 1rem; text-align: left; border: 1px solid var(--border);
+    font-size: 0.72rem; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+
+  td { padding: 0.6rem 1rem; border: 1px solid var(--border); color: var(--text-table); font-family: 'Courier New', monospace; font-size: 0.83rem; }
+  td.plain { font-family: 'Nunito', sans-serif; font-size: 0.83rem; }
+  tr:nth-child(even) td { background: var(--bg-subtle); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+  code {
+    background: var(--bg-inline); border: 1px solid var(--border-subtle); border-radius: 3px;
+    padding: 1px 6px; font-family: 'Courier New', monospace;
+    font-size: 0.83rem; color: var(--color-code);
+  }
+
+  .divider {
+    border: none; border-top: 2px solid #1e1e30;
+    margin: 2rem 0;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body > * { position: relative; z-index: 1; }
+
+
+  /* ── Nav bar ──────────────────────────────────────── */
+  .ch-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ch-back {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .ch-back:hover { color: var(--text-primary); }
+
+  .ch-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ch-toggle-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+  }
+
+  .ch-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .ch-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  .ch-toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--toggle-bg);
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    transition: background 0.3s, border 0.3s;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+
+  .ch-toggle-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-clr, #a78bfa);
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+  }
+
+  .ch-toggle input:checked ~ .ch-toggle-track .ch-toggle-thumb {
+    transform: translateX(20px);
+  }
+  /* ── End nav bar ──────────────────────────────────── */
+
+
+        [data-theme="light"] pre {
+      background: #ede9f8;
+      border-color: #d0c6ed;
+      color: #2d1b69;
+    }
+
+    [data-theme="light"] .kw { color: #7c3aed; }
+    [data-theme="light"] .fn { color: #2563a8; }
+    [data-theme="light"] .st { color: #c4622d; }
+    [data-theme="light"] .nm { color: #d97706; }
+    [data-theme="light"] .cm { color: #9b8cc0; font-style: italic; }
+    [data-theme="light"] .op { color: #8b7ab8; }
+    [data-theme="light"] .tp { color: #0f766e; }
+
+    [data-theme="light"] code {
+      background: #e8e2f5;
+      border-color: #d0c6ed;
+      color: #7c3aed;
+    }
+
+    [data-theme="light"] .good {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+
+    [data-theme="light"] .warn {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    [data-theme="light"] th {
+      color: var(--accent-clr, #9b7fe8);
+    }
+
+    [data-theme="light"] .section-title {
+      color: var(--accent-clr, #9b7fe8);
+    }
+
+    [data-theme="light"] header h1 span {
+      color: var(--accent-clr, #9b7fe8);
+    }
+    [data-theme="light"] .tag-set { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-setop { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-tup { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-unpack { background: #fef9c3; color: #854d0e; }
+  [data-theme="light"] .tag-frozen { background: #ccfbf1; color: #115e59; }
+  [data-theme="light"] .tag-tip { background: #d1fae5; color: #065f46; }
+</style>
+</head>
+<body>
+<nav class="ch-nav">
+  <a class="ch-back" href="index.html">← Index</a>
+  <div class="ch-toggle-wrap">
+    <span class="ch-toggle-label" id="ch-theme-label">DARK</span>
+    <label class="ch-toggle" aria-label="Toggle theme">
+      <input type="checkbox" id="ch-theme-toggle">
+      <div class="ch-toggle-track">
+        <div class="ch-toggle-thumb" id="ch-thumb">☽</div>
+      </div>
+    </label>
+  </div>
+</nav>
+
+<header>
+  <h1>Python → <span>Sets + Tuples</span></h1>
+  <p>Chapter 7 — Quick Revision Cheat Sheet</p>
+</header>
+
+<!-- ==================== SETS ==================== -->
+<div class="section">
+  <div class="section-title">sets — basics</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-set">SET</span> Creating Sets</div>
+    <pre>nums   <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>}
+fruits <span class="op">=</span> {<span class="st">"apple"</span>, <span class="st">"banana"</span>, <span class="st">"mango"</span>}
+empty  <span class="op">=</span> <span class="fn">set</span>()           <span class="cm"># NOT {} — that creates a dict!</span>
+
+<span class="cm"># From list — removes duplicates</span>
+unique <span class="op">=</span> <span class="fn">set</span>([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">3</span>])   <span class="cm"># {1, 2, 3}</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>(nums))   <span class="cm"># &lt;class 'set'&gt;</span></pre>
+    <div class="note"><strong>Key:</strong> Sets are unordered, mutable, no duplicates, and elements must be hashable</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-set">SET</span> Add / Remove</div>
+    <pre>s <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>}
+
+s.<span class="fn">add</span>(<span class="nm">4</span>)           <span class="cm"># {1,2,3,4} — adds one element</span>
+s.<span class="fn">add</span>(<span class="nm">2</span>)           <span class="cm"># no change — duplicates ignored silently</span>
+s.<span class="fn">update</span>([<span class="nm">5</span>, <span class="nm">6</span>])  <span class="cm"># adds multiple elements from iterable</span>
+
+s.<span class="fn">remove</span>(<span class="nm">3</span>)       <span class="cm"># removes 3 — KeyError if missing</span>
+s.<span class="fn">discard</span>(<span class="nm">99</span>)     <span class="cm"># removes 99 — NO error if missing</span>
+s.<span class="fn">pop</span>()           <span class="cm"># removes & returns an ARBITRARY element</span>
+s.<span class="fn">clear</span>()         <span class="cm"># empties the set</span></pre>
+    <div class="note"><strong>remove vs discard:</strong> remove() raises KeyError if missing; discard() silently ignores</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-set">SET</span> Membership & Length</div>
+    <pre>s <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>}
+
+<span class="nm">2</span> <span class="kw">in</span> s       <span class="cm"># True  — O(1) lookup</span>
+<span class="nm">9</span> <span class="kw">in</span> s       <span class="cm"># False</span>
+<span class="fn">len</span>(s)       <span class="cm"># 3</span></pre>
+    <div class="good">Set membership check is O(1) — much faster than list's O(n)</div>
+  </div>
+</div>
+
+<!-- SET OPERATIONS -->
+<div class="section">
+  <div class="section-title">set operations</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-setop">OPS</span> All Set Operations</div>
+    <pre>a <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>}
+b <span class="op">=</span> {<span class="nm">3</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">6</span>}
+
+<span class="cm"># Union — all elements from both</span>
+a <span class="op">|</span> b                <span class="cm"># {1,2,3,4,5,6}</span>
+a.<span class="fn">union</span>(b)          <span class="cm"># same</span>
+
+<span class="cm"># Intersection — only common elements</span>
+a <span class="op">&amp;</span> b                <span class="cm"># {3,4}</span>
+a.<span class="fn">intersection</span>(b)   <span class="cm"># same</span>
+
+<span class="cm"># Difference — in a but NOT in b</span>
+a <span class="op">-</span> b                <span class="cm"># {1,2}</span>
+a.<span class="fn">difference</span>(b)     <span class="cm"># same</span>
+
+<span class="cm"># Symmetric difference — in either but NOT both</span>
+a <span class="op">^</span> b                             <span class="cm"># {1,2,5,6}</span>
+a.<span class="fn">symmetric_difference</span>(b)        <span class="cm"># same</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-setop">SUBSET</span> Subset / Superset / Disjoint</div>
+    <pre>a <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>}
+b <span class="op">=</span> {<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>}
+
+a.<span class="fn">issubset</span>(b)     <span class="cm"># True  — all of a is in b</span>
+b.<span class="fn">issuperset</span>(a)   <span class="cm"># True  — b contains all of a</span>
+a <span class="op">&lt;=</span> b            <span class="cm"># True  — subset operator</span>
+a <span class="op">&lt;</span>  b            <span class="cm"># True  — proper subset (a != b)</span>
+
+{<span class="nm">1</span>,<span class="nm">2</span>}.<span class="fn">isdisjoint</span>({<span class="nm">3</span>,<span class="nm">4</span>})   <span class="cm"># True  — no common elements</span>
+{<span class="nm">1</span>,<span class="nm">2</span>}.<span class="fn">isdisjoint</span>({<span class="nm">2</span>,<span class="nm">3</span>})   <span class="cm"># False — 2 is common</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-frozen">FROZEN</span> frozenset — immutable set</div>
+    <pre>fs <span class="op">=</span> <span class="fn">frozenset</span>([<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>])
+
+fs.<span class="fn">add</span>(<span class="nm">4</span>)     <span class="cm"># AttributeError — immutable!</span>
+
+<span class="cm"># Use as dict key or set element</span>
+d <span class="op">=</span> {<span class="fn">frozenset</span>({<span class="nm">1</span>,<span class="nm">2</span>}): <span class="st">"pair"</span>}  <span class="cm"># valid — frozenset is hashable</span></pre>
+    <div class="note"><strong>Use frozenset when:</strong> you need a set as a dict key or inside another set</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ==================== TUPLES ==================== -->
+<div class="section">
+  <div class="section-title">tuples — basics</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-tup">TUPLE</span> Creating Tuples</div>
+    <pre>coords  <span class="op">=</span> (<span class="nm">10</span>, <span class="nm">20</span>)
+single  <span class="op">=</span> (<span class="nm">42</span>,)         <span class="cm"># trailing comma required for single element</span>
+empty   <span class="op">=</span> ()
+no_paren <span class="op">=</span> <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>      <span class="cm"># parentheses optional — still a tuple</span>
+
+<span class="fn">print</span>(<span class="fn">type</span>((<span class="nm">42</span>,)))   <span class="cm"># &lt;class 'tuple'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>((<span class="nm">42</span>)))    <span class="cm"># &lt;class 'int'&gt; — NOT a tuple!</span></pre>
+    <div class="note"><strong>Key:</strong> Tuples are ordered, immutable, allow duplicates — faster than lists</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-tup">TUPLE</span> Indexing & Slicing</div>
+    <pre>t <span class="op">=</span> (<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>, <span class="nm">40</span>)
+
+t[<span class="nm">0</span>]      <span class="cm"># 10</span>
+t[<span class="op">-</span><span class="nm">1</span>]     <span class="cm"># 40</span>
+t[<span class="nm">1</span>:<span class="nm">3</span>]    <span class="cm"># (20, 30)</span>
+t[::<span class="op">-</span><span class="nm">1</span>]   <span class="cm"># (40, 30, 20, 10)</span>
+
+t.<span class="fn">index</span>(<span class="nm">20</span>)   <span class="cm"># 1 — find index of value</span>
+t.<span class="fn">count</span>(<span class="nm">20</span>)   <span class="cm"># 1 — count occurrences</span></pre>
+  </div>
+</div>
+
+<!-- TUPLE UNPACKING -->
+<div class="section">
+  <div class="section-title">tuple unpacking</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-unpack">UNPACK</span> All Unpacking Patterns</div>
+    <pre><span class="cm"># Basic unpacking</span>
+x, y <span class="op">=</span> (<span class="nm">10</span>, <span class="nm">20</span>)          <span class="cm"># x=10, y=20</span>
+
+<span class="cm"># Swap variables</span>
+a, b <span class="op">=</span> b, a               <span class="cm"># Pythonic swap — no temp variable</span>
+
+<span class="cm"># Extended unpacking with *</span>
+first, <span class="op">*</span>rest <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>]   <span class="cm"># first=1, rest=[2,3,4]</span>
+<span class="op">*</span>init, last  <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>]   <span class="cm"># init=[1,2,3], last=4</span>
+a, <span class="op">*</span>b, c     <span class="op">=</span> [<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>, <span class="nm">4</span>]   <span class="cm"># a=1, b=[2,3], c=4</span>
+
+<span class="cm"># Ignore values with _</span>
+x, _, z <span class="op">=</span> (<span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>)           <span class="cm"># _ is convention for "don't care"</span></pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-unpack">UNPACK</span> Unpacking in loops</div>
+    <pre>pairs <span class="op">=</span> [(<span class="nm">1</span>, <span class="st">"one"</span>), (<span class="nm">2</span>, <span class="st">"two"</span>), (<span class="nm">3</span>, <span class="st">"three"</span>)]
+
+<span class="kw">for</span> num, word <span class="kw">in</span> pairs:
+    <span class="fn">print</span>(num, word)
+
+<span class="cm"># Works with dict.items() too</span>
+<span class="kw">for</span> key, val <span class="kw">in</span> d.<span class="fn">items</span>():
+    <span class="fn">print</span>(key, val)</pre>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="section">
+  <div class="section-title">sets vs tuples vs lists</div>
+
+  <div class="card">
+    <div class="card-title"><span class="tag tag-tip">COMPARE</span> When to use which</div>
+    <table>
+      <tr><th>Feature</th><th>List</th><th>Tuple</th><th>Set</th></tr>
+      <tr><td class="plain">Ordered</td><td>✓</td><td>✓</td><td>✗</td></tr>
+      <tr><td class="plain">Mutable</td><td>✓</td><td>✗</td><td>✓ (elements immutable)</td></tr>
+      <tr><td class="plain">Duplicates</td><td>✓</td><td>✓</td><td>✗</td></tr>
+      <tr><td class="plain">Indexed access</td><td>✓</td><td>✓</td><td>✗</td></tr>
+      <tr><td class="plain">Hashable (dict key)</td><td>✗</td><td>✓*</td><td>✗</td></tr>
+      <tr><td class="plain">Membership O(1)</td><td>✗ O(n)</td><td>✗ O(n)</td><td>✓</td></tr>
+      <tr><td class="plain">Use when</td><td class="plain">Ordered, changeable</td><td class="plain">Fixed data, returns</td><td class="plain">Unique items, fast lookup</td></tr>
+    </table>
+    <div class="note"><strong>*</strong> Tuple only hashable if all its elements are hashable</div>
+  </div>
+</div>
+
+<!-- QUICK REFERENCE -->
+<div class="section">
+  <div class="section-title">quick reference</div>
+  <div class="card">
+    <table>
+      <tr><th>Goal</th><th>Use</th></tr>
+      <tr><td class="plain">Create empty set</td><td>set() — NOT {}</td></tr>
+      <tr><td class="plain">Remove duplicates from list</td><td>list(set(my_list))</td></tr>
+      <tr><td class="plain">Fast membership check</td><td>x in my_set — O(1)</td></tr>
+      <tr><td class="plain">All elements from both sets</td><td>a | b or a.union(b)</td></tr>
+      <tr><td class="plain">Common elements only</td><td>a & b or a.intersection(b)</td></tr>
+      <tr><td class="plain">In a but not b</td><td>a - b or a.difference(b)</td></tr>
+      <tr><td class="plain">In either but not both</td><td>a ^ b or a.symmetric_difference(b)</td></tr>
+      <tr><td class="plain">Remove safely (no error)</td><td>set.discard(x)</td></tr>
+      <tr><td class="plain">Immutable set (hashable)</td><td>frozenset()</td></tr>
+      <tr><td class="plain">Single element tuple</td><td>(42,) — trailing comma required</td></tr>
+      <tr><td class="plain">Swap two variables</td><td>a, b = b, a</td></tr>
+      <tr><td class="plain">Unpack rest into list</td><td>first, *rest = iterable</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+  const _t = document.getElementById('ch-theme-toggle');
+  const _h = document.documentElement;
+  const _l = document.getElementById('ch-theme-label');
+  const _i = document.getElementById('ch-thumb');
+  _t.addEventListener('change', () => {
+    if (_t.checked) {
+      _h.setAttribute('data-theme','light');
+      _l.textContent = 'LIGHT'; _i.textContent = '☀';
+    } else {
+      _h.setAttribute('data-theme','dark');
+      _l.textContent = 'DARK'; _i.textContent = '☽';
+    }
+  });
+</script>
+</body>
+</html>
